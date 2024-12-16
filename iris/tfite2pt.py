@@ -3,7 +3,7 @@ import numpy as np
 from collections import OrderedDict
 from irismodel import IrisLM
 import torch
-from utils import GetKeysDict
+from mediapipe_pytorch.iris.iris_utils import GetKeysDict
 
 
 data = open("model_weights/iris_landmark.tflite", "rb").read()

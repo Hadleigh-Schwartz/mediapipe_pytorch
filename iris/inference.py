@@ -20,7 +20,6 @@ def plot(img_path, iris, eye_contour):
     cv2.circle(im, (int(lm[9] ), int(lm[10])), 1, (255, 0, 255), -1)
     cv2.circle(im, (int(lm[12] ), int(lm[13])), 1, (255, 0, 255), -1)
 
-    eye_contour
     for idx in range(71):
         cv2.circle(im, (int(eye_contour[0][idx*3]), int(eye_contour[0][idx*3 + 1])), 1, (0, 0, 255), -1)
 
@@ -98,4 +97,5 @@ class Model:
 m = Model()
 img_path = 'iris2.jpg'
 eye_contour, iris = m(img_path)
+print(iris.shape)
 plot(img_path, iris, eye_contour)

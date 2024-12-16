@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from utils import IrisBlock
+from iris_utils import IrisBlock
 
 
 class IrisLM(nn.Module):
@@ -51,7 +51,7 @@ class IrisLM(nn.Module):
         )
 
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def forward(self, x):
         """ forward prop
 
@@ -67,17 +67,17 @@ class IrisLM(nn.Module):
             iris_contour (batch_size, 15)
             (5, 3) 5 points
         """
-        with torch.no_grad():
-            x = F.pad(x, [0, 1, 0, 1], "constant", 0)
+        # with torch.no_grad():
+        x = F.pad(x, [0, 1, 0, 1], "constant", 0)
 
-            # (_, 128, 8, 8)
-            features = self.backbone(x)            
+        # (_, 128, 8, 8)
+        features = self.backbone(x)            
 
-            # (_, 213, 1, 1)  
-            eye_contour = self.eye_contour(features)            
+        # (_, 213, 1, 1)  
+        eye_contour = self.eye_contour(features)            
 
-            # (_, 15, 1, 1)
-            iris_contour = self.iris_contour(features) 
+        # (_, 15, 1, 1)
+        iris_contour = self.iris_contour(features) 
         # (batch_size, 213)  (batch_size, 15)
         return [eye_contour.view(x.shape[0], -1), iris_contour.reshape(x.shape[0], -1)]
 

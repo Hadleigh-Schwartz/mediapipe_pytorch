@@ -54,7 +54,7 @@ class FaceMesh:
         # blob = (blob - 0.5) / 0.5
         # blob = blob / 127.5 
         # blob = (blob - 128) / 255.0
-        
+        # print(blob.shape)
         facial_landmarks_torch, confidence_torch = self.torch_model.predict(blob)
 
         blob = np.expand_dims(blob, axis=0)
@@ -67,21 +67,25 @@ class FaceMesh:
         # confidence   = self.interpreter.get_tensor(self.output_details[1]['index'])
         
         # np.testing.assert_array_almost_equal(facial_landmarks_torch.cpu().detach().numpy(), facial_landmarks, decimal=3)
-        print("Tensorrt and torch values are matching ::", np.allclose(facial_landmarks_torch.cpu().detach().numpy(), facial_landmarks, atol=1e-02))
-        return facial_landmarks_torch, confidence_torch
+        print("Tensorrt and torch values are matching ::", np.allclose(facial_landmarks_torch.permute(0, 2, 3, 1).cpu().detach().numpy(), facial_landmarks, atol=1e-02))
+        print(facial_landmarks_torch.permute(0, 2, 3, 1).cpu().detach().numpy().shape, facial_landmarks.shape)
+        return facial_landmarks_torch, confidence_torch, facial_landmarks
 
 
 m = FaceMesh()
 img_path = '4.jpg'
-facial_landmarks_torch, confidence_torch = m(img_path)
+facial_landmarks_torch, confidence_torch, facial_landmarks_tf = m(img_path)
 
 im = cv2.imread(img_path)
 im = pad_image(im, desired_size=192)
 
 facial_landmarks_ = facial_landmarks_torch.reshape(-1)
+facial_landmarks_tf = facial_landmarks_tf.reshape(-1)
+print(facial_landmarks_.shape, facial_landmarks_tf.shape)
 np.save('output', facial_landmarks_)
 for idx in range(468):
     cv2.circle(im, (int(facial_landmarks_[idx*3]), int(facial_landmarks_[idx*3 + 1])), 1, (200, 160, 75), -1)
+    cv2.circle(im, (int(facial_landmarks_tf[idx*3]), int(facial_landmarks_tf[idx*3 + 1])), 1, (0, 0, 255), -1)
 
 # cv2.imwrite('output.jpg', im)
 im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)

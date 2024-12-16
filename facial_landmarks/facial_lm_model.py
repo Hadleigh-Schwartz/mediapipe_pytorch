@@ -72,7 +72,7 @@ class FacialLM_Model(nn.Module):
         )
 
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def forward(self, x):
         """ forward prop
 
@@ -90,16 +90,16 @@ class FacialLM_Model(nn.Module):
         """
         
         # @TODO remove 
-        with torch.no_grad():
-            x = nn.ReflectionPad2d((1, 0, 1, 0))(x)
-            features = self.backbone(x)            
+        # with torch.no_grad():
+        x = nn.ReflectionPad2d((1, 0, 1, 0))(x)
+        features = self.backbone(x)            
 
-            # @TODO change the names
-            confidence = self.facial_landmarks(features)            
+        # @TODO change the names
+        confidence = self.facial_landmarks(features)            
 
-            facial_landmarks = self.confidence(features) 
-        
-            return [facial_landmarks, confidence]
+        facial_landmarks = self.confidence(features) 
+    
+        return [facial_landmarks, confidence]
         # return [facial_landmarks.view(x.shape[0], -1), confidence.reshape(x.shape[0], -1)]
 
 
