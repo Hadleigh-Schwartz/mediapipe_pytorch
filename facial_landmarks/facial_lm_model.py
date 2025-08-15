@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from utils import FacialLMBasicBlock
+from .utils import FacialLMBasicBlock
 
 
 class FacialLM_Model(nn.Module):
